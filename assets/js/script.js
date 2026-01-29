@@ -121,4 +121,48 @@
   // We'll make it scrollable only if we switch it to overflow auto via CSS (not default).
   // Keep dot builder harmless.
   initScrollDots('.news-items', '.news-dots');
+
+  // -------------------------
+  // Scroll reveal animations
+  // -------------------------
+  const revealSelectors = [
+    '.story',
+    '.collections',
+    '.collection-card',
+    '.products',
+    '.product-card',
+    '.banner',
+    '.news',
+    '.news-item',
+    '.footer-grid',
+    '.footer-bottom'
+  ];
+
+  const revealTargets = qsa(revealSelectors.join(','));
+  revealTargets.forEach((el) => el.classList.add('reveal'));
+
+  const staggerItems = qsa('.collection-card, .product-card, .news-item');
+  staggerItems.forEach((el, idx) => {
+    const delay = (idx % 6) * 80;
+    el.style.setProperty('--reveal-delay', `${delay}ms`);
+  });
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.15 }
+    );
+
+    revealTargets.forEach((el) => io.observe(el));
+  } else {
+    // Fallback: show content if IntersectionObserver is not supported
+    revealTargets.forEach((el) => el.classList.add('is-visible'));
+  }
 })();

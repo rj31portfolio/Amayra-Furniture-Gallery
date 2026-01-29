@@ -398,6 +398,21 @@ button, input{
 }
 
 /* =========================================================
+   Scroll reveal animations
+========================================================= */
+.reveal{
+  opacity:0;
+  transform: translateY(18px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible{
+  opacity:1;
+  transform: translateY(0);
+}
+
+/* =========================================================
    Story
 ========================================================= */
 .story{
@@ -896,4 +911,12 @@ button, input{
     grid-template-columns: 1fr;
   }
   .site-footer .btn{ width:100%; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .reveal{
+    opacity:1;
+    transform:none;
+    transition:none;
+  }
 }
